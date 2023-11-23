@@ -1,0 +1,50 @@
+#include <stdio.h>
+#include <string.h>
+
+// Function to perform CBC-MAC
+void cbc_mac(const char *key, const char *message, char *mac) {
+    // Assuming block size is 16 bytes (128 bits)
+    int block_size = 16;
+
+    // Initialize the MAC with zeros
+    memset(mac, 0, block_size);
+
+    // XOR the message blocks with the MAC iteratively
+    while (*message) {
+        for (int i = 0; i < block_size; i++) {
+            mac[i] ^= *message++;
+        }
+    }
+
+    // Use the key for final XOR
+    for (int i = 0; i < block_size; i++) {
+        mac[i] ^= key[i];
+    }
+}
+
+int main() {
+    // Example key and message
+    char key[16];
+    char message[256]; // Adjust the size based on your input requirements
+
+    // Take input for key
+    printf("Enter key (16 characters): ");
+    scanf("%16s", key);
+
+    // Take input for message
+    printf("Enter message: ");
+    scanf("%s", message);
+
+    // Calculate CBC-MAC
+    char mac[16];
+    cbc_mac(key, message, mac);
+
+    // Display the result
+    printf("MAC: ");
+    for (int i = 0; i < 16; i++) {
+        printf("%02x", (unsigned char)mac[i]);
+    }
+    printf("\n");
+
+    return 0;
+}
